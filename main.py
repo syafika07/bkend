@@ -237,7 +237,7 @@ def clean_header(col):
     col = re.sub(r"&|/|\(|\)|\\n|RM", "", col, flags=re.IGNORECASE)
     return col
 
-def parse_date_range(start_date, end_date, filter_6am=True):
+def parse_date_ranges(start_date, end_date, filter_6am=True):
     if start_date and not end_date:
         start_dt = datetime.strptime(start_date, "%Y-%m-%d") + (timedelta(hours=6) if filter_6am else timedelta())
         end_dt = start_dt + timedelta(days=1)
@@ -389,8 +389,8 @@ def get_wtng_data(
     batch_size: int = 1000
 ):
     try:
-        start_dt_normal, end_dt_normal = parse_date_range(start_date, end_date, filter_6am=False)
-        start_dt_special, end_dt_special = parse_date_range(start_date, end_date, filter_6am=True)
+        start_dt_normal, end_dt_normal = parse_date_ranges(start_date, end_date, filter_6am=False)
+        start_dt_special, end_dt_special = parse_date_ranges(start_date, end_date, filter_6am=True)
 
         plaza_list = [p.strip() for p in plazas.split(",")] if plazas else []
         pm_list = [p.strip() for p in payment_modes.split(",")] if payment_modes else []
@@ -502,7 +502,7 @@ def get_traffic_summary(
     plazas: str = Query(None, description="Senarai EntryPlaza dipisah koma")
 ):
     try:
-        start_dt, end_dt = parse_date_range(start_date, end_date, filter_6am=False)
+        start_dt, end_dt = parse_date_ranges(start_date, end_date, filter_6am=False)
 
         query = """
             SELECT
